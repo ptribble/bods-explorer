@@ -1,0 +1,150 @@
+#!/bin/sh
+#
+# SPDX-License-Identifier: CDDL-1.0
+#
+# Copyright 2026 Peter Tribble
+#
+
+PCTJAR="lib/java/pct-gtfs.jar"
+
+#
+# the first argument is a subcommand, which selects the correct
+# class to use
+#
+
+bail() {
+    echo "ERROR: $1"
+    exit 1
+}
+
+usage() {
+    echo "Usage: $0 subcommand args..."
+    exit 2
+}
+
+case $# in
+    0)
+	usage
+	;;
+esac
+
+CACHEROOT="${HOME}/.bods-explorer"
+CACHEPROJ="timetables"
+DLSERVER="https://data.datalibrary.uk/transport/BODS-ARCHIVE/${CACHEPROJ}"
+USER_AGENT="bods-explorer/1.0"
+UNZIP="/usr/bin/unzip"
+WCLIENT="/usr/bin/curl"
+WARGS="-A ${USER_AGENT} -f -s -o"
+if [ ! -x "${WCLIENT}" ]; then
+    WCLIENT="/usr/bin/wget"
+    WARGS="-U ${USER_AGENT} -q -O"
+fi
+if [ ! -x "${WCLIENT}" ]; then
+    WCLIENT="/usr/bin/wget2"
+    WARGS="-U ${USER_AGENT} -q -O"
+fi
+#
+# intercept -D and -R as date and region, download the appropriate file
+# if we haven't already got it, unpack it, and rewrite the arguments
+#
+oldargs=( "$@" )
+for ((i=0; i < $#; i++))
+do
+  if [ "${oldargs[$i]}" == "-D" ]; then
+    DLDATE="${oldargs[$i+1]}"
+  fi
+  if [ "${oldargs[$i]}" == "-R" ]; then
+    DLAREA="${oldargs[$i+1]}"
+  fi
+done
+if [ -n "${DLAREA}" ]; then
+    #
+    # if no date given, use today
+    #
+    if [ -z "${DLDATE}" ]; then
+	DLDATE=$(date '+%Y%m%d')
+    fi
+    DLDIR="${DLDATE:0:4}/${DLDATE:4:2}/${DLDATE:6:2}"
+    DLFILEROOT="itm_${DLAREA}_gtfs_${DLDATE}"
+    DLFILE="${DLFILEROOT}.zip"
+    CACHEDIR="${CACHEROOT}/${CACHEPROJ}/${DLAREA}"
+    DLURL="${DLSERVER}/${DLDIR}/${DLFILE}"
+    if [ ! -d "${CACHEDIR}/${DLFILEROOT}" ]; then
+	if [ ! -f "${CACHEDIR}/${DLFILE}" ]; then
+	    echo "Downloading data"
+	    ${WCLIENT} ${WARGS} "${CACHEDIR}/${DLFILE}" "${DLURL}"
+	fi
+	if [ -f "${CACHEDIR}/${DLFILE}" ]; then
+	    mkdir -p "${CACHEDIR}/${DLFILEROOT}"
+	    echo "Unpacking data"
+	    "${UNZIP}" -q -d "${CACHEDIR}/${DLFILEROOT}" "${CACHEDIR}/${DLFILE}"
+	else
+	    bail "Download failed"
+	fi
+    fi
+    # check it has content
+    if [ ! -f "${CACHEDIR}/${DLFILEROOT}/agency.txt" ]; then
+	bail "invalid target"
+    fi
+    #
+    # now rewrite arguments
+    # remove -D, add it back later
+    # remove -R
+    #
+    j=0
+    for ((i=0; i < $#; i++))
+    do
+	if [ "${oldargs[$i]}" == "-D" ]; then
+	    (( i++ ))
+	elif [ "${oldargs[$i]}" == "-R" ]; then
+	    (( i++ ))
+	else
+	    nargs[$j]="${oldargs[$i]}"
+	    (( j++ ))
+	fi
+    done
+    #
+    # and add the correct -d invocation on the end
+    #
+    nargs[$j]="-d"
+    (( j++ ))
+    nargs[$j]="${CACHEDIR}/${DLFILEROOT}"
+    set -- "${nargs[@]}"
+else
+    if [ -n "${DLDATE}" ]; then
+	echo "ERROR: need -R with -D"
+	usage
+    fi
+fi
+
+CLASSDIR=uk.co.petertribble.gtfs.timetable
+case $1 in
+    all)
+	MYCLASS="ReadAll"
+	;;
+    agenc*|operator*)
+	MYCLASS="ReadAgency"
+	;;
+    route*)
+	MYCLASS="ReadRoutes"
+	;;
+    stops*)
+	MYCLASS="ReadStops"
+	;;
+    stop_time*)
+	MYCLASS="ReadStopTimes"
+	;;
+    trip*)
+	MYCLASS="ReadTrips"
+	;;
+    mapstop*)
+	MYCLASS="MapStops"
+	;;
+    *)
+	echo "ERROR: invalid option"
+	usage
+	;;
+esac
+shift
+
+java -classpath "${PCTJAR}" "${CLASSDIR}"."${MYCLASS}" "$@"

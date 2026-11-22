@@ -1,0 +1,2 @@
+Class-Path: gtfs-realtime-bindings-0.2.0.jar protobuf-java-4.36.2.jar
+Main-Class: uk.co.petertribble.gtfs.realtime.ReadFile

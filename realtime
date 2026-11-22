@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# SPDX-License-Identifier: CDDL-1.0
+#
+# Copyright 2026 Peter Tribble
+#
+
+PCTJAR="lib/java/pct-gtfs.jar"
+
+#
+# the first argument is a subcommand, which selects the correct
+# class to use
+#
+
+usage() {
+    echo "Usage: $0 subcommand args..."
+    exit 2
+}
+
+case $# in
+    0)
+	usage
+	;;
+esac
+
+CLASSDIR=uk.co.petertribble.gtfs.realtime
+case $1 in
+    display)
+	MYCLASS="ReadFile"
+	;;
+    *)
+	echo "ERROR: invalid option"
+	usage
+	;;
+esac
+shift
+
+java -classpath "${PCTJAR}" "${CLASSDIR}"."${MYCLASS}" "$@"

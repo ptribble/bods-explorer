@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# SPDX-License-Identifier: CDDL-1.0
+#
+# Copyright 2026 Peter Tribble
+#
+
+PATH=/usr/jdk/instances/jdk11/bin:$PATH
+export PATH
+
+#
+# new PMD version has categories only, configured in pmd-ruleset.xml
+#
+PMDRULES="./pmd-ruleset.xml"
+PMDCACHE="${HOME}/.pmd/cache.pct-gtfs"
+
+JARLIBDIR=lib/java
+PROTOJAR=${JARLIBDIR}/protobuf-java-4.36.2.jar
+GTFSJAR=${JARLIBDIR}/gtfs-realtime-bindings-0.2.0.jar
+BUILDJARS=${PROTOJAR}:${GTFSJAR}
+
+case $1 in
+clean)
+	rm -f $(find . -name '*.class')
+	rm -f $(find . -name '*~')
+	rm -fr javadoc
+	exit 0
+	;;
+package)
+	./pkg/mkproto > pp
+	pkgmk -d /tmp -f pp -r $(pwd) TRIBpct-gtfs
+	pkgtrans -s /tmp /tmp/TRIBpct-gtfs.pkg TRIBpct-gtfs
+	rm -fr /tmp/TRIBpct-gtfs
+	ls -l /tmp/TRIBpct-gtfs.pkg
+	rm pp
+	exit 0
+	;;
+javadoc)
+	rm -fr javadoc
+	mkdir javadoc
+	javadoc -classpath "$BUILDJARS:." -Xdoclint:all -d javadoc uk.co.petertribble.gtfs.realtime
+	exit 0
+	;;
+pmd)
+	if [ ! -d "${HOME}/.pmd" ]; then
+	    mkdir -p "${HOME}/.pmd"
+	fi
+	pmd check --cache "${PMDCACHE}" -d uk -R "${PMDRULES}" --use-version java-11 --aux-classpath $(echo lib/java/* | sed 's= =:=g') 2>/dev/null
+	exit 0
+	;;
+spotbugs)
+	#
+	# spotbugs works on the class files, so those need to be available
+	#
+	javac -Xlint -classpath ".:${BUILDJARS}" uk/co/petertribble/gtfs/*/*.java
+	spotbugs -auxclasspath $(echo lib/java/* | sed 's= =:=g') uk
+	rm -f $(find uk -name '*.class')
+	exit 0
+	;;
+esac
+
+javac -Xlint -classpath ".:${BUILDJARS}" uk/co/petertribble/gtfs/*/*.java
+jar cmf pct-gtfs.manifest lib/java/pct-gtfs.jar $(find uk -name '*.class')
+rm -f $(find uk -name '*.class')
