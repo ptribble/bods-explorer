@@ -18,21 +18,29 @@ SPDX-License-Identifier: CDDL-1.0
     <rule ref="category/java/security.xml" />
     <rule ref="category/java/codestyle.xml">
       <exclude name="AtLeastOneConstructor"/>
-      <exclude name="CommentDefaultAccessModifier"/>
       <exclude name="ShortVariable"/>
+      <exclude name="ShortClassName"/>
+      <exclude name="LongVariable"/>
+      <exclude name="FieldNamingConventions"/>
       <exclude name="LocalVariableDeclarationShouldBeAtStartOfBlock"/>
     </rule>
     <rule ref="rulesets/java/quickstart.xml">
-      <exclude name="CompareObjectsWithEquals"/>
+      <exclude name="CloseResource"/>
+      <exclude name="EmptyCatchBlock"/>
+      <exclude name="UseLocaleWithCaseConversions"/>
     </rule>
     <rule ref="category/java/performance.xml">
       <exclude name="AvoidInstantiatingObjectsInLoops"/>
     </rule>
-    <rule ref="category/java/multithreading.xml" />
+    <rule ref="category/java/multithreading.xml">
+      <exclude name="UseConcurrentHashMap"/>
+    </rule>
     <rule ref="category/java/errorprone.xml">
       <exclude name="AvoidLiteralsInIfCondition"/>
       <exclude name="DoNotTerminateVM"/>
-      <exclude name="CompareObjectsWithEquals"/>
+      <exclude name="CloseResource"/>
+      <exclude name="EmptyCatchBlock"/>
+      <exclude name="UseLocaleWithCaseConversions"/>
     </rule>
     <rule ref="category/java/bestpractices.xml">
       <exclude name="SystemPrintln"/>

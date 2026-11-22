@@ -92,9 +92,9 @@ public final class ReadStops {
     }
 
     private void printCode(final String code) {
-	String lcode = code.toLowerCase();
+	final String lcode = code.toLowerCase();
 	for (final BusStop s : slist) {
-	    if (s.getCode().toLowerCase().equals(lcode)) {
+	    if (s.getCode().equalsIgnoreCase(lcode)) {
 		printStop(s);
 	    }
 	}

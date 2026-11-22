@@ -46,14 +46,14 @@ public final class MapStops {
 	 * We need the actual positions of the 4 edges, we can get this
 	 * by looking at two opposite corners.
 	 */
-	SimplePoint sp1 = new SimplePoint("dummy1", sy1, sx1);
-	SimplePoint sp2 = new SimplePoint("dummy2", sy2, sx2);
-	double dy1 = sp1.getY();
-	double dy2 = sp2.getY();
-	double dx1 = sp1.getX();
-	double dx2 = sp2.getX();
+	final SimplePoint sp1 = new SimplePoint("dummy1", sy1, sx1);
+	final SimplePoint sp2 = new SimplePoint("dummy2", sy2, sx2);
+	final double dy1 = sp1.getY();
+	final double dy2 = sp2.getY();
+	final double dx1 = sp1.getX();
+	final double dx2 = sp2.getX();
 	for (final BusStop s : stopReader.allStops()) {
-	    SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
+	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
 		    && sp.getX() > dx1 && sp.getX() < dx2) {
 		System.out.println(sp);
@@ -62,7 +62,8 @@ public final class MapStops {
     }
 
     private void printStop(final BusStop s) {
-	SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
+	final SimplePoint sp =
+	    new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	System.out.println(sp);
     }
 
@@ -126,7 +127,7 @@ public final class MapStops {
 		    i++;
 		    havewhat = true;
 		} else {
-		    usage("missing stop");
+		    usage("missing ymin");
 		}
 	    } else if ("-Y".equals(args[i])) {
 		if (i + 1 < args.length) {
@@ -134,7 +135,7 @@ public final class MapStops {
 		    i++;
 		    havewhat = true;
 		} else {
-		    usage("missing stop");
+		    usage("missing ymax");
 		}
 	    } else if ("-x".equals(args[i])) {
 		if (i + 1 < args.length) {
@@ -142,7 +143,7 @@ public final class MapStops {
 		    i++;
 		    havewhat = true;
 		} else {
-		    usage("missing stop");
+		    usage("missing xmin");
 		}
 	    } else if ("-X".equals(args[i])) {
 		if (i + 1 < args.length) {
@@ -150,7 +151,7 @@ public final class MapStops {
 		    i++;
 		    havewhat = true;
 		} else {
-		    usage("missing stop");
+		    usage("missing xmax");
 		}
 	    } else if ("-d".equals(args[i])) {
 		i++;

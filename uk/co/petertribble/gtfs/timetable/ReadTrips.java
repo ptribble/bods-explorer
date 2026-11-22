@@ -52,7 +52,7 @@ public final class ReadTrips {
 			slist.add(stemp);
 			smap.put(pstr[2], stemp);
 			// now accumulate all the trips for a given route
-			List<Trip> ilist = rmap.containsKey(pstr[0])
+			final List<Trip> ilist = rmap.containsKey(pstr[0])
 			    ? rmap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);
@@ -65,7 +65,7 @@ public final class ReadTrips {
 			slist.add(stemp);
 			smap.put(pstr[2], stemp);
 			// now accumulate all the trips for a given route
-			List<Trip> ilist = rmap.containsKey(pstr[0])
+			final List<Trip> ilist = rmap.containsKey(pstr[0])
 			    ? rmap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);
@@ -78,7 +78,7 @@ public final class ReadTrips {
 			slist.add(stemp);
 			smap.put(pstr[2], stemp);
 			// now accumulate all the trips for a given route
-			List<Trip> ilist = rmap.containsKey(pstr[0])
+			final List<Trip> ilist = rmap.containsKey(pstr[0])
 			    ? rmap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);

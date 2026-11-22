@@ -47,7 +47,7 @@ public final class ReadStopTimes {
 			final StopTime stemp = new StopTime(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
 			slist.add(stemp);
 			// now accumulate all the stops for a given trip
-			List<StopTime> ilist = smap.containsKey(pstr[0])
+			final List<StopTime> ilist = smap.containsKey(pstr[0])
 			    ? smap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);
