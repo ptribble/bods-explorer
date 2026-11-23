@@ -97,7 +97,7 @@ public final class ReadStopTimes {
     }
 
     private static void usage() {
-	System.err.println("Usage: ReadStopTimes [-t trip] -d|-f file");
+	System.err.println("Usage: ReadStopTimes [-t trip] -d dir");
 	System.exit(2);
     }
 
@@ -111,7 +111,7 @@ public final class ReadStopTimes {
 	boolean havewhat = false;
 	/*
 	 * Two passes over the arguments. In the first pass we just look
-	 * for the mandatory filename.
+	 * for the mandatory file location.
 	 */
 	int i = 0;
 	while (i < args.length) {
@@ -126,17 +126,6 @@ public final class ReadStopTimes {
 		    usage();
 		}
 	    }
-	    if ("-f".equals(args[i])) {
-		if (i + 1 < args.length) {
-		    fname = args[i + 1];
-		    final File ftest = new File(fname);
-		    if (!ftest.exists()) {
-			usage("file doesn't exist");
-		    }
-		} else {
-		    usage();
-		}
-	    }
 	    i++;
 	}
 	if (fname == null) {
@@ -145,7 +134,7 @@ public final class ReadStopTimes {
 	final ReadStopTimes reader = new ReadStopTimes(fname);
 
 	/*
-	 * In the second pass we look for what to print. Skip the -f/-d
+	 * In the second pass we look for what to print. Skip the -d
 	 * we handled earlier.
 	 *
 	 * Lowercase arg selects specific instances.
@@ -181,8 +170,6 @@ public final class ReadStopTimes {
 		// reader.printShort();
 		havewhat = true;
 	    } else if ("-d".equals(args[i])) {
-		i++;
-	    } else if ("-f".equals(args[i])) {
 		i++;
 	    }
 	    i++;

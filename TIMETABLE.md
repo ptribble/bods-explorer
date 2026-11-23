@@ -9,10 +9,10 @@ standalone application to read the data files and format them, optionally
 allowing some filtering or selection.
 
 The timetable script here is a wrapper that avoids having to remember the
-class names. To specify the input, supply either -f with the input file,
-or -d with the directory where the files are. The wrapper also accepts
--D to specify the date  (in YYYYMMDD format) and -R the region, and will
-automatically download and cache the appropriate data files for you.
+class names. To specify the input, supply -d with the directory where the
+files are. The wrapper also accepts -D to specify the date  (in YYYYMMDD
+format) and -R the region, and will automatically download and cache the
+appropriate data files for you.
 
 The specification is here:
 

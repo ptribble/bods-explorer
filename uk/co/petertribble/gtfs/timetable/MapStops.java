@@ -91,7 +91,7 @@ public final class MapStops {
 
 	/*
 	 * Two passes over the arguments. In the first pass we just look
-	 * for the mandatory filename.
+	 * for the mandatory file location.
 	 */
 	int i = 0;
 	while (i < args.length) {
