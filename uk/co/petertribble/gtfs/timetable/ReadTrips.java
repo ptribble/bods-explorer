@@ -98,6 +98,26 @@ public final class ReadTrips {
 	return slist;
     }
 
+    /**
+     * This gives a mapping of lists of trips to routes.
+     *
+     * @return a map of lists of trips keyed by route id
+     */
+    public Map<String, List<Trip>> getRouteMap() {
+	Map<String, List<Trip>> routemap = new HashMap<>();
+	for (final Trip t : slist) {
+	    String rid = t.getRouteID();
+	    List<Trip> tlist = routemap.containsKey(rid)
+		? routemap.get(rid)
+		: new ArrayList<>();
+	    tlist.add(t);
+	    if (!routemap.containsKey(rid)) {
+		routemap.put(rid, tlist);
+	    }
+	}
+	return routemap;
+    }
+
     public Trip getTripById(final String id) {
 	return smap.get(id);
     }

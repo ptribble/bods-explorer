@@ -16,6 +16,9 @@
 package uk.co.petertribble.gtfs.timetable;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 public final class ReadAll {
 
@@ -37,12 +40,53 @@ public final class ReadAll {
 	tripReader = new ReadTrips(f);
     }
 
-    private void printStats() {
+    /*
+     * Prints out the number of things. If verbose, adds a breakdown
+     * after each count.
+     */
+    private void printStats(boolean verbose) {
 	System.out.println(agencyReader.getStats());
 	System.out.println(routeReader.getStats());
-	System.out.println(stopReader.getStats());
-	System.out.println(stopTimeReader.getStats());
+	if (verbose) {
+	    printRouteStats();
+	}
 	System.out.println(tripReader.getStats());
+	if (verbose) {
+	    printTripStats();
+	}
+	System.out.println(stopTimeReader.getStats());
+	System.out.println(stopReader.getStats());
+    }
+
+    /*
+     * Prints out the number of routes per operator.
+     * The output is sorted so that it's stable,
+     */
+    private void printRouteStats() {
+	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
+	for (String opid : new TreeSet<String> (opmap.keySet())) {
+	    final String opname = agencyReader.getAgencyById(opid).getNAME();
+	    System.out.println("    " + opid + " " + opmap.get(opid).size()
+			       + " [" + opname + "]");
+	}
+    }
+
+    /*
+     * Prints out the number of trips per operator.
+     * The output is sorted so that it's stable,
+     */
+    private void printTripStats() {
+	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
+	final Map<String, List<Trip>> tripmap = tripReader.getRouteMap();
+	for (String opid : new TreeSet<String> (opmap.keySet())) {
+	    final String opname = agencyReader.getAgencyById(opid).getNAME();
+	    int tsize = 0;
+	    for (Route route : opmap.get(opid)) {
+		tsize += tripmap.get(route.getID()).size();
+	    }
+	    System.out.println("    " + opid + " " + tsize
+			       + " [" + opname + "]");
+	}
     }
 
     private static void usage() {
@@ -87,36 +131,20 @@ public final class ReadAll {
 	 * we handled earlier.
 	 *
 	 * Lowercase arg selects specific instances.
-	 * -s short list, id + name
-	 * -i id
-	 * -t stops for that trip
+	 * -r prints route count per operator
+	 * -t prints trip count per operator
+	 * -v prints everything, verbosely
 	 */
 	i = 0;
 	while (i < args.length) {
-	    if ("-i".equals(args[i])) {
-		if (i + 1 < args.length) {
-		    if (args[i + 1].startsWith("-")) {
-			usage("missing stop");
-		    }
-		    // reader.printStop(args[i+1]);
-		    i++;
-		    havewhat = true;
-		} else {
-		    usage("missing stop");
-		}
+	    if ("-r".equals(args[i])) {
+		reader.printRouteStats();
+		havewhat = true;
 	    } else if ("-t".equals(args[i])) {
-		if (i + 1 < args.length) {
-		    if (args[i + 1].startsWith("-")) {
-			usage("missing trip");
-		    }
-		    // reader.printTrip(args[i+1]);
-		    i++;
-		    havewhat = true;
-		} else {
-		    usage("missing stop");
-		}
-	    } else if ("-s".equals(args[i])) {
-		// reader.printShort();
+		reader.printTripStats();
+		havewhat = true;
+	    } else if ("-v".equals(args[i])) {
+		reader.printStats(true);
 		havewhat = true;
 	    } else if ("-d".equals(args[i])) {
 		i++;
@@ -124,7 +152,7 @@ public final class ReadAll {
 	    i++;
 	}
 	if (!havewhat) {
-	    reader.printStats();
+	    reader.printStats(false);
 	}
     }
 }

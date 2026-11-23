@@ -53,6 +53,26 @@ public final class ReadRoutes {
 	return rlist;
     }
 
+    /**
+     * This gives a mapping of lists of routes to operators.
+     *
+     * @return a map of lists of routes keyed by operator id
+     */
+    public Map<String, List<Route>> getOperatorMap() {
+	Map<String, List<Route>> opmap = new HashMap<>();
+	for (final Route r : rlist) {
+	    String opid = r.getOPID();
+	    List<Route> tlist = opmap.containsKey(opid)
+		? opmap.get(opid)
+		: new ArrayList<>();
+	    tlist.add(r);
+	    if (!opmap.containsKey(opid)) {
+		opmap.put(opid, tlist);
+	    }
+	}
+	return opmap;
+    }
+
     public Route getRouteById(final String id) {
 	return rmap.get(id);
     }
