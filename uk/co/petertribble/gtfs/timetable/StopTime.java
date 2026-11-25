@@ -15,6 +15,8 @@
 
 package uk.co.petertribble.gtfs.timetable;
 
+import uk.co.petertribble.gtfs.util.SimpleTimes;
+
 /**
  * Represents a stop time.
  */
@@ -48,12 +50,96 @@ public final class StopTime {
 	return trip_id;
     }
 
+    /**
+     * Get the arrival time as a HH:MM:SS String.
+     */
     public String getArrival() {
 	return arrival_time;
     }
 
+    /**
+     * Get the departure time as a HH:MM:SS String.
+     */
     public String getDeparture() {
 	return departure_time;
+    }
+
+    /**
+     * Get the arrival time in seconds since midnight.
+     */
+    public int getArrivalSecs() {
+	return SimpleTimes.toSeconds(arrival_time);
+    }
+
+    /**
+     * Get the departure time in seconds since midnight.
+     */
+    public int getDepartureSecs() {
+	return SimpleTimes.toSeconds(departure_time);
+    }
+
+    /**
+     * Is the arrival time before the given time?
+     */
+    public boolean arrivesBefore(String ntime) {
+	return arrivesBefore(SimpleTimes.toSeconds(ntime));
+    }
+
+    /**
+     * Is the arrival time before the given time?
+     */
+    public boolean arrivesBefore(int nsecs) {
+	return getArrivalSecs() < nsecs;
+    }
+
+    /**
+     * Is the departure time before the given time?
+     */
+    public boolean departsBefore(String ntime) {
+	return departsBefore(SimpleTimes.toSeconds(ntime));
+    }
+
+    /**
+     * Is the departure time before the given time?
+     */
+    public boolean departsBefore(int nsecs) {
+	return getDepartureSecs() < nsecs;
+    }
+
+    /**
+     * Is the arrival time between the given times, including the lower
+     * limit but excluding the upper limit?
+     */
+    public boolean arrivesBetween(String ltime, String htime) {
+	return arrivesBetween(SimpleTimes.toSeconds(ltime),
+			      SimpleTimes.toSeconds(htime));
+    }
+
+    /**
+     * Is the arrival time between the given times, including the lower
+     * limit but excluding the upper limit?
+     */
+    public boolean arrivesBetween(int lsecs, int hsecs) {
+	final int asecs = getArrivalSecs();
+	return asecs >= lsecs && asecs < hsecs;
+    }
+
+    /**
+     * Is the departure time between the given times, including the lower
+     * limit but excluding the upper limit?
+     */
+    public boolean departsBetween(String ltime, String htime) {
+	return departsBetween(SimpleTimes.toSeconds(ltime),
+			      SimpleTimes.toSeconds(htime));
+    }
+
+    /**
+     * Is the departure time between the given times, including the lower
+     * limit but excluding the upper limit?
+     */
+    public boolean departsBetween(int lsecs, int hsecs) {
+	final int dsecs = getDepartureSecs();
+	return dsecs >= lsecs && dsecs < hsecs;
     }
 
     public String getStopID() {
