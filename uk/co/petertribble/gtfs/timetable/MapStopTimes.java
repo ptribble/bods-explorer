@@ -81,7 +81,7 @@ public final class MapStopTimes {
     }
 
     /*
-     * Plot the density of bus stops inside the given box as a heat map..
+     * Plot the density of bus stops inside the given box as a heat map.
      */
     private void plotBox(final String sy1, final String sy2,
 			  final String sx1, final String sx2) {
