@@ -111,7 +111,7 @@ public final class HeatMap extends JPanel {
 
     private void setColors() {
 	for (int i = 0; i < COLOR_RANGE; i++) {
-	    dColor[i] = new Color(i, 0, 0);
+	    dColor[i] = new Color(i, i, 0);
 	}
 
     }
