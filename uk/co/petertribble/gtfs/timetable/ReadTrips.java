@@ -104,10 +104,10 @@ public final class ReadTrips {
      * @return a map of lists of trips keyed by route id
      */
     public Map<String, List<Trip>> getRouteMap() {
-	Map<String, List<Trip>> routemap = new HashMap<>();
+	final Map<String, List<Trip>> routemap = new HashMap<>();
 	for (final Trip t : slist) {
-	    String rid = t.getRouteID();
-	    List<Trip> tlist = routemap.containsKey(rid)
+	    final String rid = t.getRouteID();
+	    final List<Trip> tlist = routemap.containsKey(rid)
 		? routemap.get(rid)
 		: new ArrayList<>();
 	    tlist.add(t);
@@ -162,7 +162,7 @@ public final class ReadTrips {
     }
 
     private static void usage() {
-	System.err.println("Usage: ReadTrips [-s|-t trip] -d dir");
+	System.err.println("Usage: ReadTrips [-r route|-s|-t trip] -d dir");
 	System.exit(2);
     }
 

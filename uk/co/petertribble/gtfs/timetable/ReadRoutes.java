@@ -59,10 +59,10 @@ public final class ReadRoutes {
      * @return a map of lists of routes keyed by operator id
      */
     public Map<String, List<Route>> getOperatorMap() {
-	Map<String, List<Route>> opmap = new HashMap<>();
+	final Map<String, List<Route>> opmap = new HashMap<>();
 	for (final Route r : rlist) {
-	    String opid = r.getOPID();
-	    List<Route> tlist = opmap.containsKey(opid)
+	    final String opid = r.getOPID();
+	    final List<Route> tlist = opmap.containsKey(opid)
 		? opmap.get(opid)
 		: new ArrayList<>();
 	    tlist.add(r);

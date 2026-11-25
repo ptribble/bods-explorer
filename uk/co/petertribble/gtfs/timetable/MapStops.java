@@ -61,6 +61,41 @@ public final class MapStops {
 	}
     }
 
+    /*
+     * Plot the density of bus stops inside the given box as a heat map..
+     */
+    private void plotBox(final String sy1, final String sy2,
+			  final String sx1, final String sx2) {
+	/*
+	 * We need the actual positions of the 4 edges, we can get this
+	 * by looking at two opposite corners.
+	 */
+	final SimplePoint sp1 = new SimplePoint("dummy1", sy1, sx1);
+	final SimplePoint sp2 = new SimplePoint("dummy2", sy2, sx2);
+	final double dy1 = sp1.getY();
+	final double dy2 = sp2.getY();
+	final double dx1 = sp1.getX();
+	final double dx2 = sp2.getX();
+	// make more flexible later
+	final int irange = 128;
+	final int[][] values = new int[128][128];
+	for (final BusStop s : stopReader.allStops()) {
+	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
+	    if (sp.getY() > dy1 && sp.getY() < dy2
+		    && sp.getX() > dx1 && sp.getX() < dx2) {
+		final int ix = (int)(irange*((sp.getX() - dx1) / (dx2 - dx1)));
+		final int iy = (int)(irange*((sp.getY() - dy1) / (dy2 - dy1)));
+		// System.out.println(iy + " - " + ix);
+		/*
+		 * We think of [latitude,longitude]
+		 * but the graph is [x,y]=[longitude,latitude]
+		 */
+		values[ix][iy]++;
+	    }
+	}
+	new HeatFrame(128, 5, 1, values);
+    }
+
     private void printStop(final BusStop s) {
 	final SimplePoint sp =
 	    new SimplePoint(s.getID(), s.getLat(), s.getLon());
@@ -68,7 +103,7 @@ public final class MapStops {
     }
 
     private static void usage() {
-	System.err.println("Usage: MapStops -d dir");
+	System.err.println("Usage: MapStops [-x minlong -X maxlong -y minlat -Y maxlat [-G]] -d dir");
 	System.exit(2);
     }
 
@@ -80,6 +115,7 @@ public final class MapStops {
     public static void main(final String[] args) throws Exception {
 	String fname = null;
 	boolean havewhat = false;
+	boolean dograph = false;
 
 	/*
 	 * The possible range of latitude(y) and longitude(x)
@@ -117,6 +153,13 @@ public final class MapStops {
 	 * Now we look for a range being specified.
 	 * Note that the values could be negative (for anything west of
 	 * greenwich or south of the equator).
+	 *
+	 * -x - left edge longitude
+	 * -X - right edge longitude
+	 * -y - lower edge latitude
+	 * -Y - upper edge latitude
+	 *
+	 * -G - plot graph
 	 */
 
 	i = 0;
@@ -153,6 +196,8 @@ public final class MapStops {
 		} else {
 		    usage("missing xmax");
 		}
+	    } else if ("-G".equals(args[i])) {
+		dograph = true;
 	    } else if ("-d".equals(args[i])) {
 		i++;
 	    }
@@ -160,7 +205,11 @@ public final class MapStops {
 	}
 	if (havewhat) {
 	    if (sy1 != null && sy2 != null & sx1 != null & sx2 != null) {
-		mapper.printBox(sy1, sy2, sx1, sx2);
+		if (dograph) {
+		    mapper.plotBox(sy1, sy2, sx1, sx2);
+		} else {
+		    mapper.printBox(sy1, sy2, sx1, sx2);
+		}
 	    } else {
 		usage("missing range");
 	    }

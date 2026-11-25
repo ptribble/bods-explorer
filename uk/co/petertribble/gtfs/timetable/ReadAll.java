@@ -44,7 +44,7 @@ public final class ReadAll {
      * Prints out the number of things. If verbose, adds a breakdown
      * after each count.
      */
-    private void printStats(boolean verbose) {
+    private void printStats(final boolean verbose) {
 	System.out.println(agencyReader.getStats());
 	System.out.println(routeReader.getStats());
 	if (verbose) {
@@ -64,7 +64,7 @@ public final class ReadAll {
      */
     private void printRouteStats() {
 	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
-	for (String opid : new TreeSet<String> (opmap.keySet())) {
+	for (final String opid : new TreeSet<String>(opmap.keySet())) {
 	    final String opname = agencyReader.getAgencyById(opid).getNAME();
 	    System.out.println("    " + opid + " " + opmap.get(opid).size()
 			       + " [" + opname + "]");
@@ -78,14 +78,48 @@ public final class ReadAll {
     private void printTripStats() {
 	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
 	final Map<String, List<Trip>> tripmap = tripReader.getRouteMap();
-	for (String opid : new TreeSet<String> (opmap.keySet())) {
+	for (final String opid : new TreeSet<String>(opmap.keySet())) {
 	    final String opname = agencyReader.getAgencyById(opid).getNAME();
 	    int tsize = 0;
-	    for (Route route : opmap.get(opid)) {
+	    for (final Route route : opmap.get(opid)) {
 		tsize += tripmap.get(route.getID()).size();
 	    }
 	    System.out.println("    " + opid + " " + tsize
 			       + " [" + opname + "]");
+	}
+    }
+
+    /*
+     * Prints out the number of trips per route, with operator ids.
+     */
+    private void printRouteTripStats() {
+	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
+	final Map<String, List<Trip>> tripmap = tripReader.getRouteMap();
+	for (final String opid : new TreeSet<String>(opmap.keySet())) {
+	    final String opname = agencyReader.getAgencyById(opid).getNAME();
+	    for (final Route route : opmap.get(opid)) {
+		System.out.println("    " + opid + ":" + route.getID() + " "
+				   + tripmap.get(route.getID()).size()
+				   + " [" + opname + ", "
+				   + route.getShortName() + "]");
+	    }
+	}
+    }
+
+    /*
+     * Prints out departures per hour.
+     */
+    private void printDeparturesPerHour() {
+	final List<StopTime> stlist = stopTimeReader.allStops();
+	final int[] counter = new int[32];
+	for (final StopTime st : stlist) {
+	    final String s = st.getDeparture();
+	    final String s2 = s.substring(0, s.indexOf(':'));
+	    final int i = Integer.parseInt(s2);
+	    counter[i]++;
+	}
+	for (int ii = 0; ii < 32; ii++) {
+	    System.out.println(ii + " " + counter[ii]);
 	}
     }
 
@@ -133,6 +167,7 @@ public final class ReadAll {
 	 * Lowercase arg selects specific instances.
 	 * -r prints route count per operator
 	 * -t prints trip count per operator
+	 * -rt prints trip count per route
 	 * -v prints everything, verbosely
 	 */
 	i = 0;
@@ -142,6 +177,12 @@ public final class ReadAll {
 		havewhat = true;
 	    } else if ("-t".equals(args[i])) {
 		reader.printTripStats();
+		havewhat = true;
+	    } else if ("-rt".equals(args[i])) {
+		reader.printRouteTripStats();
+		havewhat = true;
+	    } else if ("-h".equals(args[i])) {
+		reader.printDeparturesPerHour();
 		havewhat = true;
 	    } else if ("-v".equals(args[i])) {
 		reader.printStats(true);
