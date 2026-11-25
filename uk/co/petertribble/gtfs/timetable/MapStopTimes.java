@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uk.co.petertribble.gtfs.util.SimplePoint;
+import uk.co.petertribble.gtfs.util.SimpleTimes;
 
 public final class MapStopTimes {
 
@@ -35,6 +36,9 @@ public final class MapStopTimes {
 	stopTimesReader = new ReadStopTimes(f);
     }
 
+    /*
+     * Accumulate the number of times a stop is used.
+     */
     private Map<String, Integer> accumulate() {
 	final Map<String, Integer> counter = new HashMap<>();
 	for (StopTime st : stopTimesReader.allStops()) {
@@ -44,6 +48,27 @@ public final class MapStopTimes {
 		: Integer.valueOf(0);
 	    ii++;
 	    counter.put(s, ii);
+	}
+	return counter;
+    }
+
+    /*
+     * Accumulate the number of times a stop is used between the given times.
+     */
+    private Map<String, Integer> accumulate(String ltime, String htime) {
+	final int lsecs = SimpleTimes.toSeconds(ltime);
+	final int hsecs = SimpleTimes.toSeconds(htime);
+	final Map<String, Integer> counter = new HashMap<>();
+	for (StopTime st : stopTimesReader.allStops()) {
+	    // arrival or departure time?
+	    if (st.departsBetween(lsecs, hsecs)) {
+		final String s = st.getStopID();
+		Integer ii = (counter.containsKey(s))
+		    ? counter.get(s)
+		    : Integer.valueOf(0);
+		ii++;
+		counter.put(s, ii);
+	    }
 	}
 	return counter;
     }
@@ -59,7 +84,8 @@ public final class MapStopTimes {
      * Includes the number of times it's stopped at.
      */
     private void printBox(final String sy1, final String sy2,
-			  final String sx1, final String sx2) {
+			  final String sx1, final String sx2,
+			  final String stime, final String etime) {
 	/*
 	 * We need the actual positions of the 4 edges, we can get this
 	 * by looking at two opposite corners.
@@ -70,12 +96,16 @@ public final class MapStopTimes {
 	final double dy2 = sp2.getY();
 	final double dx1 = sp1.getX();
 	final double dx2 = sp2.getX();
-	final Map<String, Integer> scount = accumulate();
+	final Map<String, Integer> scount = (stime == null && etime ==  null)
+	    ? accumulate()
+	    : accumulate(stime, etime);
 	for (final BusStop s : stopReader.allStops()) {
 	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
 		    && sp.getX() > dx1 && sp.getX() < dx2) {
-		System.out.println(sp + " @ " + scount.get(s.getID()));
+		if (scount.containsKey(s.getID())) {
+		    System.out.println(sp + " @ " + scount.get(s.getID()));
+		}
 	    }
 	}
     }
@@ -84,7 +114,8 @@ public final class MapStopTimes {
      * Plot the density of bus stops inside the given box as a heat map.
      */
     private void plotBox(final String sy1, final String sy2,
-			  final String sx1, final String sx2) {
+			 final String sx1, final String sx2,
+			 final String stime, final String etime) {
 	/*
 	 * We need the actual positions of the 4 edges, we can get this
 	 * by looking at two opposite corners.
@@ -98,7 +129,9 @@ public final class MapStopTimes {
 	// make more flexible later
 	final int irange = 128;
 	final int[][] values = new int[128][128];
-	final Map<String, Integer> scount = accumulate();
+	final Map<String, Integer> scount = (stime == null && etime ==  null)
+	    ? accumulate()
+	    : accumulate(stime, etime);
 	for (final BusStop s : stopReader.allStops()) {
 	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
@@ -109,15 +142,11 @@ public final class MapStopTimes {
 		/*
 		 * We think of [latitude,longitude]
 		 * but the graph is [x,y]=[longitude,latitude]
+		 *
+		 * Ignore any stops that aren't used.
 		 */
 		if (scount.containsKey(s.getID())) {
 		    values[ix][iy] += scount.get(s.getID());
-		} else {
-		    /*
-		     * Just for diagnostics, but these are stops that no bus
-		     * calls at.
-		     */
-		    System.err.println("Missing stop data for " + s);
 		}
 	    }
 	}
@@ -131,7 +160,7 @@ public final class MapStopTimes {
     }
 
     private static void usage() {
-	System.err.println("Usage: MapStops [-x minlong -X maxlong -y minlat -Y maxlat [-G]] -d dir");
+	System.err.println("Usage: MapStops [-x minlong -X maxlong -y minlat -Y maxlat [-t starttime -T endtime] [-G]] -d dir");
 	System.exit(2);
     }
 
@@ -152,6 +181,11 @@ public final class MapStopTimes {
 	String sy2 = null;
 	String sx1 = null;
 	String sx2 = null;
+	/*
+	 * The possible range of start and end time
+	 */
+	String stime = null;
+	String etime = null;
 
 	/*
 	 * Two passes over the arguments. In the first pass we just look
@@ -186,6 +220,8 @@ public final class MapStopTimes {
 	 * -X - right edge longitude
 	 * -y - lower edge latitude
 	 * -Y - upper edge latitude
+	 * -t - start time
+	 * -T - end time
 	 *
 	 * -G - plot graph
 	 */
@@ -224,6 +260,22 @@ public final class MapStopTimes {
 		} else {
 		    usage("missing xmax");
 		}
+	    } else if ("-t".equals(args[i])) {
+		if (i + 1 < args.length) {
+		    stime = args[i + 1];
+		    i++;
+		    havewhat = true;
+		} else {
+		    usage("missing tmin");
+		}
+	    } else if ("-T".equals(args[i])) {
+		if (i + 1 < args.length) {
+		    etime = args[i + 1];
+		    i++;
+		    havewhat = true;
+		} else {
+		    usage("missing tmax");
+		}
 	    } else if ("-G".equals(args[i])) {
 		dograph = true;
 	    } else if ("-d".equals(args[i])) {
@@ -234,9 +286,9 @@ public final class MapStopTimes {
 	if (havewhat) {
 	    if (sy1 != null && sy2 != null & sx1 != null & sx2 != null) {
 		if (dograph) {
-		    mapper.plotBox(sy1, sy2, sx1, sx2);
+		    mapper.plotBox(sy1, sy2, sx1, sx2, stime, etime);
 		} else {
-		    mapper.printBox(sy1, sy2, sx1, sx2);
+		    mapper.printBox(sy1, sy2, sx1, sx2, stime, etime);
 		}
 	    } else {
 		usage("missing range");
