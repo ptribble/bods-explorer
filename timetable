@@ -137,8 +137,11 @@ case $1 in
     trip*)
 	MYCLASS="ReadTrips"
 	;;
-    mapstop*)
+    mapstops*)
 	MYCLASS="MapStops"
+	;;
+    mapstoptimes*)
+	MYCLASS="MapStopTimes"
 	;;
     *)
 	echo "ERROR: invalid option"
