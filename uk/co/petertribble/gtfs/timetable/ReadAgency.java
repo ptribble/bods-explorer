@@ -118,6 +118,9 @@ public final class ReadAgency {
 	 */
 	int i = 0;
 	while (i < args.length) {
+	    if ("-help".equals(args[i]) || "--help".equals(args[i])) {
+		usage();
+	    }
 	    if ("-d".equals(args[i])) {
 		if (i + 1 < args.length) {
 		    final File ftest = new File(args[i + 1], AGENCY_FILE);
