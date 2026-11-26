@@ -138,24 +138,11 @@ public final class ReadStopTimes {
 	 * we handled earlier.
 	 *
 	 * Lowercase arg selects specific instances.
-	 * -s short list, id + name
-	 * -i id
-	 * -t stops for that trip
+	 * -t stops for the given trip
 	 */
 	i = 0;
 	while (i < args.length) {
-	    if ("-i".equals(args[i])) {
-		if (i + 1 < args.length) {
-		    if (args[i + 1].startsWith("-")) {
-			usage("missing stop");
-		    }
-		    // reader.printStop(args[i+1]);
-		    i++;
-		    havewhat = true;
-		} else {
-		    usage("missing stop");
-		}
-	    } else if ("-t".equals(args[i])) {
+	    if ("-t".equals(args[i])) {
 		if (i + 1 < args.length) {
 		    if (args[i + 1].startsWith("-")) {
 			usage("missing trip");
@@ -166,9 +153,6 @@ public final class ReadStopTimes {
 		} else {
 		    usage("missing stop");
 		}
-	    } else if ("-s".equals(args[i])) {
-		// reader.printShort();
-		havewhat = true;
 	    } else if ("-d".equals(args[i])) {
 		i++;
 	    }

@@ -102,7 +102,7 @@ public final class ReadRoutes {
     }
 
     private static void usage() {
-	System.err.println("Usage: ReadRoutes [-s|-i id] -d dir");
+	System.err.println("Usage: ReadRoutes [-r route|-s] -d dir");
 	System.exit(2);
     }
 
@@ -143,12 +143,12 @@ public final class ReadRoutes {
 	 * we handled earlier.
 	 *
 	 * Lowercase arg selects specific instances.
+	 * -r just the given route
 	 * -s short list, id + name
-	 * -i id
 	 */
 	i = 0;
 	while (i < args.length) {
-	    if ("-i".equals(args[i])) {
+	    if ("-r".equals(args[i])) {
 		if (i + 1 < args.length) {
 		    if (args[i + 1].startsWith("-")) {
 			usage("missing route");

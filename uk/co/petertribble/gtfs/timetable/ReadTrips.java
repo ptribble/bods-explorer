@@ -203,8 +203,9 @@ public final class ReadTrips {
 	 * we handled earlier.
 	 *
 	 * Lowercase arg selects specific instances.
+	 * -r show trips for the given route
 	 * -s short list, id + headsign
-	 * -i id
+	 * -t show the trip of the given id.
 	 */
 	i = 0;
 	while (i < args.length) {

@@ -101,7 +101,7 @@ public final class ReadStops {
     }
 
     private static void usage() {
-	System.err.println("Usage: ReadStops [-s|-c code|-i id] -d dir");
+	System.err.println("Usage: ReadStops [-c code|-i id|-s] -d dir");
 	System.exit(2);
     }
 

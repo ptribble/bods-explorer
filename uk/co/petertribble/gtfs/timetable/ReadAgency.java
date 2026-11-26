@@ -100,7 +100,7 @@ public final class ReadAgency {
     }
 
     private static void usage() {
-	System.err.println("Usage: ReadAgency [-s|-n name|-o operator_id] -d dir");
+	System.err.println("Usage: ReadAgency [-n name|-o operator_id|-s] -d dir");
 	System.exit(2);
     }
 
@@ -141,9 +141,9 @@ public final class ReadAgency {
 	 * we handled earlier.
 	 *
 	 * Lowercase arg selects specific instances.
-	 * -s short list, id + name
-	 * -o operator, by id
 	 * -n operator, by substring match on name
+	 * -o operator, by id
+	 * -s short list, id + name
 	 */
 	i = 0;
 	while (i < args.length) {

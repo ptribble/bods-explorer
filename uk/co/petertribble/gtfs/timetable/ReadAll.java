@@ -148,7 +148,13 @@ public final class ReadAll {
     }
 
     private static void usage() {
-	System.err.println("Usage: ReadAll [-t trip] -d dir");
+	System.err.println("Usage: ReadAll args -d dir");
+	System.err.println("  -r shows route count per operator");
+	System.err.println("  -t shows trip count per operator");
+	System.err.println("  -rt prints trip count per route");
+	System.err.println("  -v prints everything, verbosely");
+	System.err.println("  -h prints stop counts per hour");
+	System.err.println("  -ho prints stop counts per hour for the given operator");
 	System.exit(2);
     }
 
