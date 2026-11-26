@@ -123,6 +123,30 @@ public final class ReadAll {
 	}
     }
 
+    /*
+     * Prints out departures per hour, for a given operator.
+     */
+    private void printDeparturesPerHour(String opid) {
+	final List<StopTime> stlist = stopTimeReader.allStops();
+	final int[] counter = new int[32];
+	for (final StopTime st : stlist) {
+	    //chain through to get the operator of this trip
+	    final Trip ntrip = tripReader.getTripById(st.getTripID());
+	    final Route nroute = routeReader.getRouteById(ntrip.getRouteID());
+	    final String ropid = nroute.getOPID();
+	    //
+	    if (opid.equals(ropid)) {
+		final String s = st.getDeparture();
+		final String s2 = s.substring(0, s.indexOf(':'));
+		final int i = Integer.parseInt(s2);
+		counter[i]++;
+	    }
+	}
+	for (int ii = 0; ii < 32; ii++) {
+	    System.out.println(ii + " " + counter[ii]);
+	}
+    }
+
     private static void usage() {
 	System.err.println("Usage: ReadAll [-t trip] -d dir");
 	System.exit(2);
@@ -169,6 +193,8 @@ public final class ReadAll {
 	 * -t prints trip count per operator
 	 * -rt prints trip count per route
 	 * -v prints everything, verbosely
+	 * -h prints stop counts per hour
+	 * -ho prints stop counts per hour for the given operator
 	 */
 	i = 0;
 	while (i < args.length) {
@@ -184,6 +210,17 @@ public final class ReadAll {
 	    } else if ("-h".equals(args[i])) {
 		reader.printDeparturesPerHour();
 		havewhat = true;
+	    } else if ("-ho".equals(args[i])) {
+		if (i + 1 < args.length) {
+		    if (args[i + 1].startsWith("-")) {
+			usage("missing operator");
+		    }
+		    reader.printDeparturesPerHour(args[i+1]);
+		    i++;
+		    havewhat = true;
+		} else {
+		    usage("missing operator");
+		}
 	    } else if ("-v".equals(args[i])) {
 		reader.printStats(true);
 		havewhat = true;
