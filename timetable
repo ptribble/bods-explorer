@@ -128,7 +128,7 @@ case $1 in
     route*)
 	MYCLASS="ReadRoutes"
 	;;
-    stops*)
+    stop|stops*)
 	MYCLASS="ReadStops"
 	;;
     stop_time*)
