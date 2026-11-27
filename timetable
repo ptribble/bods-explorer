@@ -143,6 +143,9 @@ case $1 in
     mapstoptimes*)
 	MYCLASS="MapStopTimes"
 	;;
+    timetable*)
+	MYCLASS="TimeTable"
+	;;
     *)
 	echo "ERROR: invalid option"
 	usage
