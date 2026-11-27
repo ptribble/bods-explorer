@@ -18,7 +18,7 @@ package uk.co.petertribble.gtfs.timetable;
 /**
  * Represents a bus trip.
  */
-public final class Trip {
+public final class GtfsTrip {
 
     private final String route_id;
     private final String service_id;
@@ -30,7 +30,7 @@ public final class Trip {
     private final String wheelchair_accessible;
     private final String vehicle_journey_code;
 
-    public Trip(final String rid, final String sid, final String tid,
+    public GtfsTrip(final String rid, final String sid, final String tid,
 		final String headsign, final String direction,
 		final String block, final String shape,
 		final String accessible, final String vjcode) {

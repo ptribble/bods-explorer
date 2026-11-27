@@ -27,8 +27,8 @@ public final class ReadRoutes {
 
     private static final String ROUTES_FILE = "routes.txt";
 
-    private List<Route> rlist = new ArrayList<>();
-    private Map<String, Route> rmap = new HashMap<>();
+    private List<GtfsRoute> rlist = new ArrayList<>();
+    private Map<String, GtfsRoute> rmap = new HashMap<>();
 
     public ReadRoutes(final String fname) {
 	this(new File(fname));
@@ -40,7 +40,7 @@ public final class ReadRoutes {
 	    for (final String line : Files.readAllLines(f1.toPath())) {
 		final String[] pstr = line.split(",");
 		if (!"route_id".equals(pstr[0])) {
-		    final Route rtemp = new Route(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4]);
+		    final GtfsRoute rtemp = new GtfsRoute(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4]);
 		    rlist.add(rtemp);
 		    rmap.put(pstr[0], rtemp);
 		}
@@ -49,7 +49,7 @@ public final class ReadRoutes {
 	}
     }
 
-    public List<Route> allRoutes() {
+    public List<GtfsRoute> allRoutes() {
 	return rlist;
     }
 
@@ -58,11 +58,11 @@ public final class ReadRoutes {
      *
      * @return a map of lists of routes keyed by operator id
      */
-    public Map<String, List<Route>> getOperatorMap() {
-	final Map<String, List<Route>> opmap = new HashMap<>();
-	for (final Route r : rlist) {
+    public Map<String, List<GtfsRoute>> getOperatorMap() {
+	final Map<String, List<GtfsRoute>> opmap = new HashMap<>();
+	for (final GtfsRoute r : rlist) {
 	    final String opid = r.getOPID();
-	    final List<Route> tlist = opmap.containsKey(opid)
+	    final List<GtfsRoute> tlist = opmap.containsKey(opid)
 		? opmap.get(opid)
 		: new ArrayList<>();
 	    tlist.add(r);
@@ -73,7 +73,7 @@ public final class ReadRoutes {
 	return opmap;
     }
 
-    public Route getRouteById(final String id) {
+    public GtfsRoute getRouteById(final String id) {
 	return rmap.get(id);
     }
 
@@ -82,13 +82,13 @@ public final class ReadRoutes {
     }
 
     private void printAll() {
-	for (final Route r : rlist) {
+	for (final GtfsRoute r : rlist) {
 	    printRoute(r);
 	}
     }
 
     private void printShort() {
-	for (final Route r : rlist) {
+	for (final GtfsRoute r : rlist) {
 	    System.out.println(r.getID() + " = " + r.getShortName());
 	}
     }
@@ -97,7 +97,7 @@ public final class ReadRoutes {
 	System.out.println(rmap.get(name));
     }
 
-    private void printRoute(final Route r) {
+    private void printRoute(final GtfsRoute r) {
 	System.out.println(r);
     }
 

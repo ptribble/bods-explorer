@@ -18,7 +18,7 @@ package uk.co.petertribble.gtfs.timetable;
 /**
  * Represents a bus route.
  */
-public final class Route {
+public final class GtfsRoute {
 
     private final String route_id;
     private final String agency_id;
@@ -26,7 +26,7 @@ public final class Route {
     private final String route_long_name;
     private final String route_type;
 
-    public Route(final String id, final String opid,
+    public GtfsRoute(final String id, final String opid,
 		 final String sname, final String lname, final String type) {
 	route_id = stripquotes(id);
 	agency_id = stripquotes(opid);

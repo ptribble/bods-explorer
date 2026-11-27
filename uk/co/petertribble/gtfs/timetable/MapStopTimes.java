@@ -41,7 +41,7 @@ public final class MapStopTimes {
      */
     private Map<String, Integer> accumulate() {
 	final Map<String, Integer> counter = new HashMap<>();
-	for (StopTime st : stopTimesReader.allStops()) {
+	for (GtfsStopTime st : stopTimesReader.allStops()) {
 	    final String s = st.getStopID();
 	    Integer ii = (counter.containsKey(s))
 		? counter.get(s)
@@ -59,7 +59,7 @@ public final class MapStopTimes {
 	final int lsecs = SimpleTimes.toSeconds(ltime);
 	final int hsecs = SimpleTimes.toSeconds(htime);
 	final Map<String, Integer> counter = new HashMap<>();
-	for (StopTime st : stopTimesReader.allStops()) {
+	for (GtfsStopTime st : stopTimesReader.allStops()) {
 	    // arrival or departure time?
 	    if (st.departsBetween(lsecs, hsecs)) {
 		final String s = st.getStopID();
@@ -74,7 +74,7 @@ public final class MapStopTimes {
     }
 
     private void printAll() {
-	for (final BusStop s : stopReader.allStops()) {
+	for (final GtfsStop s : stopReader.allStops()) {
 	    printStop(s);
 	}
     }
@@ -99,7 +99,7 @@ public final class MapStopTimes {
 	final Map<String, Integer> scount = (stime == null && etime ==  null)
 	    ? accumulate()
 	    : accumulate(stime, etime);
-	for (final BusStop s : stopReader.allStops()) {
+	for (final GtfsStop s : stopReader.allStops()) {
 	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
 		    && sp.getX() > dx1 && sp.getX() < dx2) {
@@ -132,7 +132,7 @@ public final class MapStopTimes {
 	final Map<String, Integer> scount = (stime == null && etime ==  null)
 	    ? accumulate()
 	    : accumulate(stime, etime);
-	for (final BusStop s : stopReader.allStops()) {
+	for (final GtfsStop s : stopReader.allStops()) {
 	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
 		    && sp.getX() > dx1 && sp.getX() < dx2) {
@@ -153,7 +153,7 @@ public final class MapStopTimes {
 	new HeatFrame(128, 5, 1, values);
     }
 
-    private void printStop(final BusStop s) {
+    private void printStop(final GtfsStop s) {
 	final SimplePoint sp =
 	    new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	System.out.println(sp);

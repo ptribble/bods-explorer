@@ -27,11 +27,11 @@ public final class ReadStopTimes {
 
     private static final String STOPTIMES_FILE = "stop_times.txt";
 
-    private List<StopTime> slist = new ArrayList<>();
+    private List<GtfsStopTime> slist = new ArrayList<>();
     /**
      * A Map of trips with the List of stops for each trip.
      */
-    private Map<String, List<StopTime>> smap = new HashMap<>();
+    private Map<String, List<GtfsStopTime>> smap = new HashMap<>();
 
     public ReadStopTimes(final String fname) {
 	this(new File(fname));
@@ -44,10 +44,10 @@ public final class ReadStopTimes {
 		final String[] pstr = line.split(",", 10);
 		if (pstr.length == 10) {
 		    if (!"trip_id".equals(pstr[0])) {
-			final StopTime stemp = new StopTime(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
+			final GtfsStopTime stemp = new GtfsStopTime(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
 			slist.add(stemp);
 			// now accumulate all the stops for a given trip
-			final List<StopTime> ilist = smap.containsKey(pstr[0])
+			final List<GtfsStopTime> ilist = smap.containsKey(pstr[0])
 			    ? smap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);
@@ -63,11 +63,11 @@ public final class ReadStopTimes {
 	}
     }
 
-    public List<StopTime> allStops() {
+    public List<GtfsStopTime> allStops() {
 	return slist;
     }
 
-    public List<StopTime> getStopsForTrip(final String trip) {
+    public List<GtfsStopTime> getStopsForTrip(final String trip) {
 	return smap.get(trip);
     }
 
@@ -77,14 +77,14 @@ public final class ReadStopTimes {
     }
 
     private void printAll() {
-	for (final StopTime s : slist) {
+	for (final GtfsStopTime s : slist) {
 	    printStop(s);
 	}
     }
 
     private void printTrip(final String trip) {
 	if (smap.containsKey(trip)) {
-	    for (final StopTime s : smap.get(trip)) {
+	    for (final GtfsStopTime s : smap.get(trip)) {
 		printStop(s);
 	    }
 	} else {
@@ -92,7 +92,7 @@ public final class ReadStopTimes {
 	}
     }
 
-    private void printStop(final StopTime s) {
+    private void printStop(final GtfsStopTime s) {
 	System.out.println(s);
     }
 

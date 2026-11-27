@@ -32,7 +32,7 @@ public final class MapStops {
     }
 
     private void printAll() {
-	for (final BusStop s : stopReader.allStops()) {
+	for (final GtfsStop s : stopReader.allStops()) {
 	    printStop(s);
 	}
     }
@@ -52,7 +52,7 @@ public final class MapStops {
 	final double dy2 = sp2.getY();
 	final double dx1 = sp1.getX();
 	final double dx2 = sp2.getX();
-	for (final BusStop s : stopReader.allStops()) {
+	for (final GtfsStop s : stopReader.allStops()) {
 	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
 		    && sp.getX() > dx1 && sp.getX() < dx2) {
@@ -79,7 +79,7 @@ public final class MapStops {
 	// make more flexible later
 	final int irange = 128;
 	final int[][] values = new int[128][128];
-	for (final BusStop s : stopReader.allStops()) {
+	for (final GtfsStop s : stopReader.allStops()) {
 	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
 		    && sp.getX() > dx1 && sp.getX() < dx2) {
@@ -96,7 +96,7 @@ public final class MapStops {
 	new HeatFrame(128, 5, 1, values);
     }
 
-    private void printStop(final BusStop s) {
+    private void printStop(final GtfsStop s) {
 	final SimplePoint sp =
 	    new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	System.out.println(sp);

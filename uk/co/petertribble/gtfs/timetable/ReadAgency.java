@@ -27,8 +27,8 @@ public final class ReadAgency {
 
     private static final String AGENCY_FILE = "agency.txt";
 
-    private List<Agency> alist = new ArrayList<>();
-    private Map<String, Agency> amap = new HashMap<>();
+    private List<GtfsAgency> alist = new ArrayList<>();
+    private Map<String, GtfsAgency> amap = new HashMap<>();
 
     public ReadAgency(final String fname) {
 	this(new File(fname));
@@ -40,7 +40,7 @@ public final class ReadAgency {
 	    for (final String line : Files.readAllLines(f1.toPath())) {
 		final String[] pstr = line.split(",");
 		if (!"agency_id".equals(pstr[0])) {
-		    final Agency atemp = new Agency(pstr[0], pstr[1], pstr[2],
+		    final GtfsAgency atemp = new GtfsAgency(pstr[0], pstr[1], pstr[2],
 					    pstr[3], pstr[4], pstr[5], pstr[6]);
 		    alist.add(atemp);
 		    amap.put(pstr[0], atemp);
@@ -50,18 +50,18 @@ public final class ReadAgency {
 	}
     }
 
-    public List<Agency> allAgencies() {
+    public List<GtfsAgency> allAgencies() {
 	return alist;
     }
 
-    public Agency getAgencyById(final String id) {
+    public GtfsAgency getAgencyById(final String id) {
 	return amap.get(id);
     }
 
-    public List<Agency> matchAgenciesByName(final String sname) {
+    public List<GtfsAgency> matchAgenciesByName(final String sname) {
 	final String lname = sname.toLowerCase();
-	final List<Agency> tlist = new ArrayList<>();
-	for (final Agency operator : alist) {
+	final List<GtfsAgency> tlist = new ArrayList<>();
+	for (final GtfsAgency operator : alist) {
 	    if (operator.getNAME().toLowerCase().contains(lname)) {
 		tlist.add(operator);
 	    }
@@ -74,19 +74,19 @@ public final class ReadAgency {
     }
 
     private void printAll() {
-	for (final Agency operator : alist) {
+	for (final GtfsAgency operator : alist) {
 	    printOperator(operator);
 	}
     }
 
     private void printShort() {
-	for (final Agency operator : alist) {
+	for (final GtfsAgency operator : alist) {
 	    System.out.println(operator.getID() + " = " + operator.getNAME());
 	}
     }
 
     private void printMatchingOperators(final String name) {
-	for (final Agency operator : matchAgenciesByName(name)) {
+	for (final GtfsAgency operator : matchAgenciesByName(name)) {
 	    printOperator(operator);
 	}
     }
@@ -95,7 +95,7 @@ public final class ReadAgency {
 	System.out.println(amap.get(name));
     }
 
-    private void printOperator(final Agency operator) {
+    private void printOperator(final GtfsAgency operator) {
 	System.out.println(operator);
     }
 

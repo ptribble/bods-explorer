@@ -3,7 +3,7 @@ archived timetable data files that can be found at
 
 https://data.datalibrary.uk/transport/BODS-ARCHIVE/timetables/
 
-There's a class Foo for each thing, and then a ReadFoo class that reads
+There's a class GtfsFoo for each thing, and then a ReadFoo class that reads
 the data files. Each Read class has a main method so it can be used as a
 standalone application to read the data files and format them, optionally
 allowing some filtering or selection.

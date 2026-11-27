@@ -27,15 +27,15 @@ public final class ReadTrips {
 
     private static final String TRIPS_FILE = "trips.txt";
 
-    private List<Trip> slist = new ArrayList<>();
+    private List<GtfsTrip> slist = new ArrayList<>();
     /**
      * A Map of trip_id to the trip.
      */
-    private Map<String, Trip> smap = new HashMap<>();
+    private Map<String, GtfsTrip> smap = new HashMap<>();
     /**
      * A Map of routes with the List of trips for each route.
      */
-    private Map<String, List<Trip>> rmap = new HashMap<>();
+    private Map<String, List<GtfsTrip>> rmap = new HashMap<>();
 
     public ReadTrips(final String fname) {
 	this(new File(fname));
@@ -48,11 +48,11 @@ public final class ReadTrips {
 		final String[] pstr = line.split(",", 11);
 		if (pstr.length == 11) {
 		    // there are 2 commas embedded in the name
-		    final Trip stemp = new Trip(pstr[0], pstr[1], pstr[2], pstr[3] + "," + pstr[4] + "," + pstr[5], pstr[6], pstr[7], pstr[8], pstr[9], pstr[10]);
+		    final GtfsTrip stemp = new GtfsTrip(pstr[0], pstr[1], pstr[2], pstr[3] + "," + pstr[4] + "," + pstr[5], pstr[6], pstr[7], pstr[8], pstr[9], pstr[10]);
 			slist.add(stemp);
 			smap.put(pstr[2], stemp);
 			// now accumulate all the trips for a given route
-			final List<Trip> ilist = rmap.containsKey(pstr[0])
+			final List<GtfsTrip> ilist = rmap.containsKey(pstr[0])
 			    ? rmap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);
@@ -61,11 +61,11 @@ public final class ReadTrips {
 			}
 		} else if (pstr.length == 10) {
 		    // there's a comma embedded in the name
-		    final Trip stemp = new Trip(pstr[0], pstr[1], pstr[2], pstr[3] + "," + pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
+		    final GtfsTrip stemp = new GtfsTrip(pstr[0], pstr[1], pstr[2], pstr[3] + "," + pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
 			slist.add(stemp);
 			smap.put(pstr[2], stemp);
 			// now accumulate all the trips for a given route
-			final List<Trip> ilist = rmap.containsKey(pstr[0])
+			final List<GtfsTrip> ilist = rmap.containsKey(pstr[0])
 			    ? rmap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);
@@ -74,11 +74,11 @@ public final class ReadTrips {
 			}
 		} else if (pstr.length == 9) {
 		    if (!"route_id".equals(pstr[0])) {
-			final Trip stemp = new Trip(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
+			final GtfsTrip stemp = new GtfsTrip(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
 			slist.add(stemp);
 			smap.put(pstr[2], stemp);
 			// now accumulate all the trips for a given route
-			final List<Trip> ilist = rmap.containsKey(pstr[0])
+			final List<GtfsTrip> ilist = rmap.containsKey(pstr[0])
 			    ? rmap.get(pstr[0])
 			    : new ArrayList<>();
 			ilist.add(stemp);
@@ -94,7 +94,7 @@ public final class ReadTrips {
 	}
     }
 
-    public List<Trip> allTrips() {
+    public List<GtfsTrip> allTrips() {
 	return slist;
     }
 
@@ -103,11 +103,11 @@ public final class ReadTrips {
      *
      * @return a map of lists of trips keyed by route id
      */
-    public Map<String, List<Trip>> getRouteMap() {
-	final Map<String, List<Trip>> routemap = new HashMap<>();
-	for (final Trip t : slist) {
+    public Map<String, List<GtfsTrip>> getRouteMap() {
+	final Map<String, List<GtfsTrip>> routemap = new HashMap<>();
+	for (final GtfsTrip t : slist) {
 	    final String rid = t.getRouteID();
-	    final List<Trip> tlist = routemap.containsKey(rid)
+	    final List<GtfsTrip> tlist = routemap.containsKey(rid)
 		? routemap.get(rid)
 		: new ArrayList<>();
 	    tlist.add(t);
@@ -118,11 +118,11 @@ public final class ReadTrips {
 	return routemap;
     }
 
-    public Trip getTripById(final String id) {
+    public GtfsTrip getTripById(final String id) {
 	return smap.get(id);
     }
 
-    public List<Trip> getTripsForRoute(final String route) {
+    public List<GtfsTrip> getTripsForRoute(final String route) {
 	return rmap.get(route);
     }
 
@@ -132,14 +132,14 @@ public final class ReadTrips {
     }
 
     private void printAll() {
-	for (final Trip s : slist) {
+	for (final GtfsTrip s : slist) {
 	    printTrip(s);
 	}
     }
 
     private void printRoute(final String route) {
 	if (rmap.containsKey(route)) {
-	    for (final Trip s : rmap.get(route)) {
+	    for (final GtfsTrip s : rmap.get(route)) {
 		printTrip(s);
 	    }
 	} else {
@@ -148,7 +148,7 @@ public final class ReadTrips {
     }
 
     private void printShort() {
-	for (final Trip s : slist) {
+	for (final GtfsTrip s : slist) {
 	    System.out.println(s.getServiceID() + " = " + s.getHeadsign());
 	}
     }
@@ -157,7 +157,7 @@ public final class ReadTrips {
 	System.out.println(smap.get(name));
     }
 
-    private void printTrip(final Trip s) {
+    private void printTrip(final GtfsTrip s) {
 	System.out.println(s);
     }
 

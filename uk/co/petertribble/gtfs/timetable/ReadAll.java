@@ -63,7 +63,7 @@ public final class ReadAll {
      * The output is sorted so that it's stable,
      */
     private void printRouteStats() {
-	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
+	final Map<String, List<GtfsRoute>> opmap = routeReader.getOperatorMap();
 	for (final String opid : new TreeSet<String>(opmap.keySet())) {
 	    final String opname = agencyReader.getAgencyById(opid).getNAME();
 	    System.out.println("    " + opid + " " + opmap.get(opid).size()
@@ -76,12 +76,12 @@ public final class ReadAll {
      * The output is sorted so that it's stable,
      */
     private void printTripStats() {
-	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
-	final Map<String, List<Trip>> tripmap = tripReader.getRouteMap();
+	final Map<String, List<GtfsRoute>> opmap = routeReader.getOperatorMap();
+	final Map<String, List<GtfsTrip>> tripmap = tripReader.getRouteMap();
 	for (final String opid : new TreeSet<String>(opmap.keySet())) {
 	    final String opname = agencyReader.getAgencyById(opid).getNAME();
 	    int tsize = 0;
-	    for (final Route route : opmap.get(opid)) {
+	    for (final GtfsRoute route : opmap.get(opid)) {
 		tsize += tripmap.get(route.getID()).size();
 	    }
 	    System.out.println("    " + opid + " " + tsize
@@ -93,11 +93,11 @@ public final class ReadAll {
      * Prints out the number of trips per route, with operator ids.
      */
     private void printRouteTripStats() {
-	final Map<String, List<Route>> opmap = routeReader.getOperatorMap();
-	final Map<String, List<Trip>> tripmap = tripReader.getRouteMap();
+	final Map<String, List<GtfsRoute>> opmap = routeReader.getOperatorMap();
+	final Map<String, List<GtfsTrip>> tripmap = tripReader.getRouteMap();
 	for (final String opid : new TreeSet<String>(opmap.keySet())) {
 	    final String opname = agencyReader.getAgencyById(opid).getNAME();
-	    for (final Route route : opmap.get(opid)) {
+	    for (final GtfsRoute route : opmap.get(opid)) {
 		System.out.println("    " + opid + ":" + route.getID() + " "
 				   + tripmap.get(route.getID()).size()
 				   + " [" + opname + ", "
@@ -110,9 +110,9 @@ public final class ReadAll {
      * Prints out departures per hour.
      */
     private void printDeparturesPerHour() {
-	final List<StopTime> stlist = stopTimeReader.allStops();
+	final List<GtfsStopTime> stlist = stopTimeReader.allStops();
 	final int[] counter = new int[32];
-	for (final StopTime st : stlist) {
+	for (final GtfsStopTime st : stlist) {
 	    final String s = st.getDeparture();
 	    final String s2 = s.substring(0, s.indexOf(':'));
 	    final int i = Integer.parseInt(s2);
@@ -127,12 +127,12 @@ public final class ReadAll {
      * Prints out departures per hour, for a given operator.
      */
     private void printDeparturesPerHour(String opid) {
-	final List<StopTime> stlist = stopTimeReader.allStops();
+	final List<GtfsStopTime> stlist = stopTimeReader.allStops();
 	final int[] counter = new int[32];
-	for (final StopTime st : stlist) {
+	for (final GtfsStopTime st : stlist) {
 	    //chain through to get the operator of this trip
-	    final Trip ntrip = tripReader.getTripById(st.getTripID());
-	    final Route nroute = routeReader.getRouteById(ntrip.getRouteID());
+	    final GtfsTrip ntrip = tripReader.getTripById(st.getTripID());
+	    final GtfsRoute nroute = routeReader.getRouteById(ntrip.getRouteID());
 	    final String ropid = nroute.getOPID();
 	    //
 	    if (opid.equals(ropid)) {

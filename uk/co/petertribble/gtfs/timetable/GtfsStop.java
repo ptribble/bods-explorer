@@ -18,7 +18,7 @@ package uk.co.petertribble.gtfs.timetable;
 /**
  * Represents a bus stop.
  */
-public final class BusStop {
+public final class GtfsStop {
 
     private final String stop_id;
     private final String stop_code;
@@ -30,7 +30,7 @@ public final class BusStop {
     private final String parent_station;
     private final String platform_code;
 
-    public BusStop(final String id, final String code, final String name,
+    public GtfsStop(final String id, final String code, final String name,
 		   final String lat, final String lon,
 		   final String wheelchair, final String loctype,
 		   final String parent, final String platform) {

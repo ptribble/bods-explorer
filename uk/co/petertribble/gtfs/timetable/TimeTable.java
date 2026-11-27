@@ -44,20 +44,20 @@ public final class TimeTable {
      * Prints out a quick summary of the route.
      */
     private void printSummary(final String route) {
-	final List<Trip> tlist = tripReader.getTripsForRoute(route);
-	final Route r = routeReader.getRouteById(route);
+	final List<GtfsTrip> tlist = tripReader.getTripsForRoute(route);
+	final GtfsRoute r = routeReader.getRouteById(route);
 	if (r == null) {
 	    System.out.println("No such route " + route);
 	}
-	final Agency routeop = agencyReader.getAgencyById(r.getOPID());
+	final GtfsAgency routeop = agencyReader.getAgencyById(r.getOPID());
 	System.out.println("Route " + route + " is operated by "
 			   + routeop.getNAME());
 	System.out.println(" has " + tlist.size() + " trips");
-	for (Trip t : tlist) {
-	    List<StopTime> stlist = stopTimeReader.getStopsForTrip(t.getTripID());
+	for (GtfsTrip t : tlist) {
+	    List<GtfsStopTime> stlist = stopTimeReader.getStopsForTrip(t.getTripID());
 	    // work out start time
 	    String tstart = null;
-	    for (StopTime st : stlist) {
+	    for (GtfsStopTime st : stlist) {
 		if ("0".equals(st.getStopSeq())) {
 		    tstart = st.getDeparture();
 		}
@@ -74,18 +74,18 @@ public final class TimeTable {
      * Prints out the timetable.
      */
     private void printTimeTable(final String route) {
-	final List<Trip> tlist = tripReader.getTripsForRoute(route);
-	final Route r = routeReader.getRouteById(route);
+	final List<GtfsTrip> tlist = tripReader.getTripsForRoute(route);
+	final GtfsRoute r = routeReader.getRouteById(route);
 	if (r == null) {
 	    System.out.println("No such route " + route);
 	}
-	final Agency routeop = agencyReader.getAgencyById(r.getOPID());
+	final GtfsAgency routeop = agencyReader.getAgencyById(r.getOPID());
 	System.out.println("Route " + route + " is operated by "
 			   + routeop.getNAME());
 	System.out.println(" has " + tlist.size() + " trips");
-	for (Trip t : tlist) {
-	    List<StopTime> stlist = stopTimeReader.getStopsForTrip(t.getTripID());
-	    for (StopTime st : stlist) {
+	for (GtfsTrip t : tlist) {
+	    List<GtfsStopTime> stlist = stopTimeReader.getStopsForTrip(t.getTripID());
+	    for (GtfsStopTime st : stlist) {
 		System.out.println(st.getStopSeq() + " "
 				   + st.getStopID() + " ("
 				   + stopReader.getStopById(st.getStopID()).getName()

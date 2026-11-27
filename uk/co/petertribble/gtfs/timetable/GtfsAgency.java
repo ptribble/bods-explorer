@@ -18,7 +18,7 @@ package uk.co.petertribble.gtfs.timetable;
 /**
  * Represents a bus operator.
  */
-public final class Agency {
+public final class GtfsAgency {
 
     private final String agency_id;
     private final String agency_name;
@@ -28,7 +28,7 @@ public final class Agency {
     private final String agency_phone;
     private final String agency_noc;
 
-    public Agency(final String id, final String name, final String url, final String tz, final String lang, final String phone, final String noc) {
+    public GtfsAgency(final String id, final String name, final String url, final String tz, final String lang, final String phone, final String noc) {
 	agency_id = stripquotes(id);
 	agency_name = stripquotes(name);
 	agency_url = stripquotes(url);

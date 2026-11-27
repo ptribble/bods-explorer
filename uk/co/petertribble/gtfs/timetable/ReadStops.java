@@ -27,8 +27,8 @@ public final class ReadStops {
 
     private static final String STOPS_FILE = "stops.txt";
 
-    private List<BusStop> slist = new ArrayList<>();
-    private Map<String, BusStop> smap = new HashMap<>();
+    private List<GtfsStop> slist = new ArrayList<>();
+    private Map<String, GtfsStop> smap = new HashMap<>();
 
     public ReadStops(final String fname) {
 	this(new File(fname));
@@ -41,13 +41,13 @@ public final class ReadStops {
 		final String[] pstr = line.split(",", 10);
 		if (pstr.length == 10) {
 		    // there's a comma embedded in the name
-		    final BusStop stemp = new BusStop(pstr[0], pstr[1], pstr[2] + pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
+		    final GtfsStop stemp = new GtfsStop(pstr[0], pstr[1], pstr[2] + pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
 			slist.add(stemp);
 			smap.put(pstr[0], stemp);
 
 		} else if (pstr.length == 9) {
 		    if (!"stop_id".equals(pstr[0])) {
-			final BusStop stemp = new BusStop(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
+			final GtfsStop stemp = new GtfsStop(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
 			slist.add(stemp);
 			smap.put(pstr[0], stemp);
 		    }
@@ -59,11 +59,11 @@ public final class ReadStops {
 	}
     }
 
-    public List<BusStop> allStops() {
+    public List<GtfsStop> allStops() {
 	return slist;
     }
 
-    public BusStop getStopById(final String id) {
+    public GtfsStop getStopById(final String id) {
 	return smap.get(id);
     }
 
@@ -72,13 +72,13 @@ public final class ReadStops {
     }
 
     private void printAll() {
-	for (final BusStop s : slist) {
+	for (final GtfsStop s : slist) {
 	    printStop(s);
 	}
     }
 
     private void printShort() {
-	for (final BusStop s : slist) {
+	for (final GtfsStop s : slist) {
 	    System.out.println(s.getID() + " = " + s.getName());
 	}
     }
@@ -87,13 +87,13 @@ public final class ReadStops {
 	System.out.println(smap.get(name));
     }
 
-    private void printStop(final BusStop s) {
+    private void printStop(final GtfsStop s) {
 	System.out.println(s);
     }
 
     private void printCode(final String code) {
 	final String lcode = code.toLowerCase();
-	for (final BusStop s : slist) {
+	for (final GtfsStop s : slist) {
 	    if (s.getCode().equalsIgnoreCase(lcode)) {
 		printStop(s);
 	    }

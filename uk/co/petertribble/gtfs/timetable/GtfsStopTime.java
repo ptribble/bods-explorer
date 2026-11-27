@@ -20,7 +20,7 @@ import uk.co.petertribble.gtfs.util.SimpleTimes;
 /**
  * Represents a stop time.
  */
-public final class StopTime {
+public final class GtfsStopTime {
 
     private final String trip_id;
     private final String arrival_time;
@@ -33,7 +33,7 @@ public final class StopTime {
     private final String shape_dist_travelled;
     private final String timepoint;
 
-    public StopTime(final String tripid, final String atime, final String dtime, final String stopid, final String seq, final String headsign, final String ptype, final String dtype, final String dist, final String tpoint) {
+    public GtfsStopTime(final String tripid, final String atime, final String dtime, final String stopid, final String seq, final String headsign, final String ptype, final String dtype, final String dist, final String tpoint) {
 	trip_id = stripquotes(tripid);
 	arrival_time = stripquotes(atime);
 	departure_time = stripquotes(dtime);
