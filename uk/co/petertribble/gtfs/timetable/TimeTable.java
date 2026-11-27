@@ -154,7 +154,7 @@ public final class TimeTable {
 		    if (args[i + 1].startsWith("-")) {
 			usage("missing route");
 		    }
-		    route = args[i+1];
+		    route = args[i + 1];
 		    i++;
 		} else {
 		    usage("missing route");

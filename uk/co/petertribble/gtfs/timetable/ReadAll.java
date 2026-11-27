@@ -224,7 +224,7 @@ public final class ReadAll {
 		    if (args[i + 1].startsWith("-")) {
 			usage("missing operator");
 		    }
-		    reader.printDeparturesPerHour(args[i+1]);
+		    reader.printDeparturesPerHour(args[i + 1]);
 		    i++;
 		    havewhat = true;
 		} else {

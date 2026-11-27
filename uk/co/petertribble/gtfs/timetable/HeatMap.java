@@ -134,7 +134,7 @@ public final class HeatMap extends JPanel {
 	 */
 	for (int i = 0; i < boardSize; i++) {
 	    for (int j = 0; j < boardSize; j++) {
-		gr2.setPaint(dColor[(COLOR_RANGE-1)*(values[i][boardSize-j-1]-vmin)/(vmax-vmin)]);
+		gr2.setPaint(dColor[(COLOR_RANGE - 1) * (values[i][boardSize - j - 1] - vmin) / (vmax - vmin)]);
 		gr2.fill(new Rectangle2D.Double(dww * i, dhh * j, ddw, ddh));
 	    }
 	}

@@ -136,8 +136,8 @@ public final class MapStopTimes {
 	    final SimplePoint sp = new SimplePoint(s.getID(), s.getLat(), s.getLon());
 	    if (sp.getY() > dy1 && sp.getY() < dy2
 		    && sp.getX() > dx1 && sp.getX() < dx2) {
-		final int ix = (int)(irange*((sp.getX() - dx1) / (dx2 - dx1)));
-		final int iy = (int)(irange*((sp.getY() - dy1) / (dy2 - dy1)));
+		final int ix = (int) (irange * ((sp.getX() - dx1) / (dx2 - dx1)));
+		final int iy = (int) (irange * ((sp.getY() - dy1) / (dy2 - dy1)));
 		// System.out.println(iy + " - " + ix);
 		/*
 		 * We think of [latitude,longitude]
