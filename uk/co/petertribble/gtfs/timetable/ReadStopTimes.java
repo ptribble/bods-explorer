@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class ReadStopTimes {
 
     private static final String STOPTIMES_FILE = "stop_times.txt";
+
+    private static final Pattern PCSV = Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
     private List<GtfsStopTime> slist = new ArrayList<>();
     /**
@@ -41,22 +44,18 @@ public final class ReadStopTimes {
 	final File f1 = f.isDirectory() ? new File(f, STOPTIMES_FILE) : f;
 	try {
 	    for (final String line : Files.readAllLines(f1.toPath())) {
-		final String[] pstr = line.split(",", 10);
-		if (pstr.length == 10) {
-		    if (!"trip_id".equals(pstr[0])) {
-			final GtfsStopTime stemp = new GtfsStopTime(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
-			slist.add(stemp);
-			// now accumulate all the stops for a given trip
-			final List<GtfsStopTime> ilist = smap.containsKey(pstr[0])
-			    ? smap.get(pstr[0])
-			    : new ArrayList<>();
-			ilist.add(stemp);
-			if (!smap.containsKey(pstr[0])) {
-			    smap.put(pstr[0], ilist);
-			}
+		final String[] pstr = PCSV.split(line, 10);
+		if (!"trip_id".equals(pstr[0])) {
+		    final GtfsStopTime stemp = new GtfsStopTime(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
+		    slist.add(stemp);
+		    // now accumulate all the stops for a given trip
+		    final List<GtfsStopTime> ilist = smap.containsKey(pstr[0])
+			? smap.get(pstr[0])
+			: new ArrayList<>();
+		    ilist.add(stemp);
+		    if (!smap.containsKey(pstr[0])) {
+			smap.put(pstr[0], ilist);
 		    }
-		} else {
-		    System.err.println(pstr.length + line);
 		}
 	    }
 	} catch (IOException ioe) {

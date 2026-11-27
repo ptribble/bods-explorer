@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class ReadRoutes {
 
     private static final String ROUTES_FILE = "routes.txt";
+
+    private static final Pattern PCSV = Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
     private List<GtfsRoute> rlist = new ArrayList<>();
     private Map<String, GtfsRoute> rmap = new HashMap<>();
@@ -38,7 +41,7 @@ public final class ReadRoutes {
 	final File f1 = f.isDirectory() ? new File(f, ROUTES_FILE) : f;
 	try {
 	    for (final String line : Files.readAllLines(f1.toPath())) {
-		final String[] pstr = line.split(",");
+		final String[] pstr = PCSV.split(line, 5);
 		if (!"route_id".equals(pstr[0])) {
 		    final GtfsRoute rtemp = new GtfsRoute(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4]);
 		    rlist.add(rtemp);

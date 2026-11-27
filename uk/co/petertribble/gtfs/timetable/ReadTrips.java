@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class ReadTrips {
 
     private static final String TRIPS_FILE = "trips.txt";
+
+    private static final Pattern PCSV = Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
     private List<GtfsTrip> slist = new ArrayList<>();
     /**
@@ -45,49 +48,19 @@ public final class ReadTrips {
 	final File f1 = f.isDirectory() ? new File(f, TRIPS_FILE) : f;
 	try {
 	    for (final String line : Files.readAllLines(f1.toPath())) {
-		final String[] pstr = line.split(",", 11);
-		if (pstr.length == 11) {
-		    // there are 2 commas embedded in the name
-		    final GtfsTrip stemp = new GtfsTrip(pstr[0], pstr[1], pstr[2], pstr[3] + "," + pstr[4] + "," + pstr[5], pstr[6], pstr[7], pstr[8], pstr[9], pstr[10]);
-			slist.add(stemp);
-			smap.put(pstr[2], stemp);
-			// now accumulate all the trips for a given route
-			final List<GtfsTrip> ilist = rmap.containsKey(pstr[0])
-			    ? rmap.get(pstr[0])
-			    : new ArrayList<>();
-			ilist.add(stemp);
-			if (!rmap.containsKey(pstr[0])) {
-			    rmap.put(pstr[0], ilist);
-			}
-		} else if (pstr.length == 10) {
-		    // there's a comma embedded in the name
-		    final GtfsTrip stemp = new GtfsTrip(pstr[0], pstr[1], pstr[2], pstr[3] + "," + pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
-			slist.add(stemp);
-			smap.put(pstr[2], stemp);
-			// now accumulate all the trips for a given route
-			final List<GtfsTrip> ilist = rmap.containsKey(pstr[0])
-			    ? rmap.get(pstr[0])
-			    : new ArrayList<>();
-			ilist.add(stemp);
-			if (!rmap.containsKey(pstr[0])) {
-			    rmap.put(pstr[0], ilist);
-			}
-		} else if (pstr.length == 9) {
-		    if (!"route_id".equals(pstr[0])) {
-			final GtfsTrip stemp = new GtfsTrip(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
-			slist.add(stemp);
-			smap.put(pstr[2], stemp);
-			// now accumulate all the trips for a given route
-			final List<GtfsTrip> ilist = rmap.containsKey(pstr[0])
-			    ? rmap.get(pstr[0])
-			    : new ArrayList<>();
-			ilist.add(stemp);
-			if (!rmap.containsKey(pstr[0])) {
-			    rmap.put(pstr[0], ilist);
-			}
+		final String[] pstr = PCSV.split(line, 9);
+		if (!"route_id".equals(pstr[0])) {
+		    final GtfsTrip stemp = new GtfsTrip(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
+		    slist.add(stemp);
+		    smap.put(pstr[2], stemp);
+		    // now accumulate all the trips for a given route
+		    final List<GtfsTrip> ilist = rmap.containsKey(pstr[0])
+			? rmap.get(pstr[0])
+			: new ArrayList<>();
+		    ilist.add(stemp);
+		    if (!rmap.containsKey(pstr[0])) {
+			rmap.put(pstr[0], ilist);
 		    }
-		} else {
-		    System.err.println(pstr.length + line);
 		}
 	    }
 	} catch (IOException ioe) {

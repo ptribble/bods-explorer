@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class ReadAgency {
 
     private static final String AGENCY_FILE = "agency.txt";
+
+    private static final Pattern PCSV = Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
     private List<GtfsAgency> alist = new ArrayList<>();
     private Map<String, GtfsAgency> amap = new HashMap<>();
@@ -38,7 +41,7 @@ public final class ReadAgency {
 	final File f1 = f.isDirectory() ? new File(f, AGENCY_FILE) : f;
 	try {
 	    for (final String line : Files.readAllLines(f1.toPath())) {
-		final String[] pstr = line.split(",");
+		final String[] pstr = PCSV.split(line, 7);
 		if (!"agency_id".equals(pstr[0])) {
 		    final GtfsAgency atemp = new GtfsAgency(pstr[0], pstr[1], pstr[2],
 					    pstr[3], pstr[4], pstr[5], pstr[6]);

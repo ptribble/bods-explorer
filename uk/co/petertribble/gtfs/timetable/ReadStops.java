@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class ReadStops {
 
     private static final String STOPS_FILE = "stops.txt";
+
+    private static final Pattern PCSV = Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
     private List<GtfsStop> slist = new ArrayList<>();
     private Map<String, GtfsStop> smap = new HashMap<>();
@@ -38,21 +41,11 @@ public final class ReadStops {
 	final File f1 = f.isDirectory() ? new File(f, STOPS_FILE) : f;
 	try {
 	    for (final String line : Files.readAllLines(f1.toPath())) {
-		final String[] pstr = line.split(",", 10);
-		if (pstr.length == 10) {
-		    // there's a comma embedded in the name
-		    final GtfsStop stemp = new GtfsStop(pstr[0], pstr[1], pstr[2] + pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8], pstr[9]);
-			slist.add(stemp);
-			smap.put(pstr[0], stemp);
-
-		} else if (pstr.length == 9) {
-		    if (!"stop_id".equals(pstr[0])) {
-			final GtfsStop stemp = new GtfsStop(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
-			slist.add(stemp);
-			smap.put(pstr[0], stemp);
-		    }
-		} else {
-		    System.err.println(pstr.length + line);
+		final String[] pstr = PCSV.split(line, 9);
+		if (!"stop_id".equals(pstr[0])) {
+		    final GtfsStop stemp = new GtfsStop(pstr[0], pstr[1], pstr[2], pstr[3], pstr[4], pstr[5], pstr[6], pstr[7], pstr[8]);
+		    slist.add(stemp);
+		    smap.put(pstr[0], stemp);
 		}
 	    }
 	} catch (IOException ioe) {
