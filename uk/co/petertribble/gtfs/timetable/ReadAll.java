@@ -126,7 +126,7 @@ public final class ReadAll {
     /*
      * Prints out departures per hour, for a given operator.
      */
-    private void printDeparturesPerHour(String opid) {
+    private void printDeparturesPerHour(final String opid) {
 	final List<GtfsStopTime> stlist = stopTimeReader.allStops();
 	final int[] counter = new int[32];
 	for (final GtfsStopTime st : stlist) {

@@ -81,28 +81,28 @@ public final class GtfsStopTime {
     /**
      * Is the arrival time before the given time?
      */
-    public boolean arrivesBefore(String ntime) {
+    public boolean arrivesBefore(final String ntime) {
 	return arrivesBefore(SimpleTimes.toSeconds(ntime));
     }
 
     /**
      * Is the arrival time before the given time?
      */
-    public boolean arrivesBefore(int nsecs) {
+    public boolean arrivesBefore(final int nsecs) {
 	return getArrivalSecs() < nsecs;
     }
 
     /**
      * Is the departure time before the given time?
      */
-    public boolean departsBefore(String ntime) {
+    public boolean departsBefore(final String ntime) {
 	return departsBefore(SimpleTimes.toSeconds(ntime));
     }
 
     /**
      * Is the departure time before the given time?
      */
-    public boolean departsBefore(int nsecs) {
+    public boolean departsBefore(final int nsecs) {
 	return getDepartureSecs() < nsecs;
     }
 
@@ -110,7 +110,7 @@ public final class GtfsStopTime {
      * Is the arrival time between the given times, including the lower
      * limit but excluding the upper limit?
      */
-    public boolean arrivesBetween(String ltime, String htime) {
+    public boolean arrivesBetween(final String ltime, final String htime) {
 	return arrivesBetween(SimpleTimes.toSeconds(ltime),
 			      SimpleTimes.toSeconds(htime));
     }
@@ -119,7 +119,7 @@ public final class GtfsStopTime {
      * Is the arrival time between the given times, including the lower
      * limit but excluding the upper limit?
      */
-    public boolean arrivesBetween(int lsecs, int hsecs) {
+    public boolean arrivesBetween(final int lsecs, final int hsecs) {
 	final int asecs = getArrivalSecs();
 	return asecs >= lsecs && asecs < hsecs;
     }
@@ -128,7 +128,7 @@ public final class GtfsStopTime {
      * Is the departure time between the given times, including the lower
      * limit but excluding the upper limit?
      */
-    public boolean departsBetween(String ltime, String htime) {
+    public boolean departsBetween(final String ltime, final String htime) {
 	return departsBetween(SimpleTimes.toSeconds(ltime),
 			      SimpleTimes.toSeconds(htime));
     }
@@ -137,7 +137,7 @@ public final class GtfsStopTime {
      * Is the departure time between the given times, including the lower
      * limit but excluding the upper limit?
      */
-    public boolean departsBetween(int lsecs, int hsecs) {
+    public boolean departsBetween(final int lsecs, final int hsecs) {
 	final int dsecs = getDepartureSecs();
 	return dsecs >= lsecs && dsecs < hsecs;
     }

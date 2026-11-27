@@ -55,7 +55,7 @@ public final class MapStopTimes {
     /*
      * Accumulate the number of times a stop is used between the given times.
      */
-    private Map<String, Integer> accumulate(String ltime, String htime) {
+    private Map<String, Integer> accumulate(final String ltime, final String htime) {
 	final int lsecs = SimpleTimes.toSeconds(ltime);
 	final int hsecs = SimpleTimes.toSeconds(htime);
 	final Map<String, Integer> counter = new HashMap<>();

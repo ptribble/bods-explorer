@@ -38,7 +38,7 @@ public final class SimpleTimes {
      * range. In particular, HH could be over 24 to represent the
      * following day.
      */
-    public static int toSeconds(String s) {
+    public static int toSeconds(final String s) {
 	int secs = -1;
 	String[] scomps = s.split(":");
 	if (scomps.length == 2) {
