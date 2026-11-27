@@ -170,6 +170,10 @@ public final class StopTime {
 	return timepoint;
     }
 
+    public boolean isExactTime() {
+	return timepoint.equals("1");
+    }
+
     @Override
     public String toString() {
 	return trip_id + "\n"
