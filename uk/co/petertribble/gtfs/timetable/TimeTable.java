@@ -17,12 +17,11 @@ package uk.co.petertribble.gtfs.timetable;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
 
 public final class TimeTable {
 
     private ReadAgency agencyReader;
+    private ReadCalendar calendarReader;
     private ReadRoutes routeReader;
     private ReadStops stopReader;
     private ReadStopTimes stopTimeReader;
@@ -34,6 +33,7 @@ public final class TimeTable {
 
     public TimeTable(final File f) {
 	agencyReader = new ReadAgency(f);
+	calendarReader = new ReadCalendar(f);
 	routeReader = new ReadRoutes(f);
 	stopReader = new ReadStops(f);
 	stopTimeReader = new ReadStopTimes(f);
@@ -50,21 +50,24 @@ public final class TimeTable {
 	    System.out.println("No such route " + route);
 	}
 	final GtfsAgency routeop = agencyReader.getAgencyById(r.getOPID());
-	System.out.println("Route " + route + " is operated by "
-			   + routeop.getNAME());
-	System.out.println(" has " + tlist.size() + " trips");
+	System.out.println("Route " + route
+			   + " is operated by " + routeop.getNAME()
+			   + " with " + tlist.size() + " trips");
 	for (GtfsTrip t : tlist) {
 	    List<GtfsStopTime> stlist = stopTimeReader.getStopsForTrip(t.getTripID());
 	    // work out start time
 	    String tstart = null;
-	    for (GtfsStopTime st : stlist) {
+	    for (final GtfsStopTime st : stlist) {
 		if ("0".equals(st.getStopSeq())) {
 		    tstart = st.getDeparture();
 		}
 	    }
+	    final GtfsCalendar calid = calendarReader.getCalendar(t.getServiceID());
+	    final String sdays = calid == null ? "" : " on " + calid.daysRunning();
 	    System.out.println("  Service " + r.getShortName()
-			       + " direction " + t.getDirection()
+			       + " dir " + t.getDirection()
 			       + " to " + t.getHeadsign()
+			       + sdays
 			       + " at " + tstart
 			       + " has " + stlist.size() + " stops");
 	}
