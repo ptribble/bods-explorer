@@ -23,6 +23,7 @@ import java.util.TreeSet;
 public final class ReadAll {
 
     private ReadAgency agencyReader;
+    private ReadCalendar calendarReader;
     private ReadRoutes routeReader;
     private ReadStops stopReader;
     private ReadStopTimes stopTimeReader;
@@ -34,6 +35,7 @@ public final class ReadAll {
 
     public ReadAll(final File f) {
 	agencyReader = new ReadAgency(f);
+	calendarReader = new ReadCalendar(f);
 	routeReader = new ReadRoutes(f);
 	stopReader = new ReadStops(f);
 	stopTimeReader = new ReadStopTimes(f);
@@ -56,6 +58,7 @@ public final class ReadAll {
 	}
 	System.out.println(stopTimeReader.getStats());
 	System.out.println(stopReader.getStats());
+	System.out.println(calendarReader.getStats());
     }
 
     /*
